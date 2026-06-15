@@ -1,6 +1,6 @@
 <img alt="DigitalCrafts Logo - Hires" src="https://github.com/user-attachments/assets/fc5fbc04-8759-40bf-a0b2-acf8218a56b0" />
 
-# ITWEB220-2602B
+# AAIS202-2602B
 
 Welcome to the course repository for **AAIS202-2602B** at **Digital Crafts**.
 
