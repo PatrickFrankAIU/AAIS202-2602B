@@ -1,6 +1,6 @@
 <img alt="DigitalCrafts Logo - Hires" src="https://github.com/user-attachments/assets/fc5fbc04-8759-40bf-a0b2-acf8218a56b0" />
 
-# ITWEB220-2602B
+# AAIS202-2602B
 
 Welcome to the course repository for **AAIS202-2602B** at **Digital Crafts**.
 
@@ -14,8 +14,8 @@ Use these guides to get ready for class work, optional local practice, and GitHu
 
 | Guide | Use This For |
 | --- | --- |
-| [Install Python and VS Code](https://patrickfrankaiu.github.io/ITWEB220-2602B/documentation/installation_guide.html) | Setting up Python 3, VS Code, the Python extension, and Pylance on your computer. (Control-Click to open in a separate tab.)|
-| [Create Your GitHub Portfolio](https://patrickfrankaiu.github.io/ITWEB220-2602B/documentation/github_portfolio_guide.html) | Building and polishing your GitHub profile and portfolio materials. (Control-Click to open in a separate tab.)|
+| [Install Python and VS Code](https://patrickfrankaiu.github.io/AAIS202-2602B/documentation/installation_guide.html) | Setting up Python 3, VS Code, the Python extension, and Pylance on your computer. (Control-Click to open in a separate tab.)|
+| [Create Your GitHub Portfolio](https://patrickfrankaiu.github.io/AAIS202-2602B/documentation/github_portfolio_guide.html) | Building and polishing your GitHub profile and portfolio materials. (Control-Click to open in a separate tab.)|
 
 ## Quick Start
 
