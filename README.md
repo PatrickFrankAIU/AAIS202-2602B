@@ -2,9 +2,9 @@
 
 # ITWEB220-2602B
 
-Welcome to the course repository for **ITWEB220-2602B** at **Digital Crafts**.
+Welcome to the course repository for **AAIS202-2602B** at **Digital Crafts**.
 
-This repository is for students enrolled in **ITWEB220-2602B**. It is not an open course.
+This repository is for students enrolled in **AAIS202-2602B**. It is not an open course.
 
 **Instructor:** Patrick Frank
 
