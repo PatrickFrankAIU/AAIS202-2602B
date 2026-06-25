@@ -16,6 +16,7 @@ Use these guides to get ready for class work, optional local practice, and GitHu
 | --- | --- |
 | [Install Python and VS Code](https://patrickfrankaiu.github.io/AAIS202-2602B/documentation/installation_guide.html) | Setting up Python 3, VS Code, the Python extension, and Pylance on your computer. (Control-Click to open in a separate tab.)|
 | [Create Your GitHub Portfolio](https://patrickfrankaiu.github.io/AAIS202-2602B/documentation/github_portfolio_guide.html) | Building and polishing your GitHub profile and portfolio materials. (Control-Click to open in a separate tab.)|
+| [Python Loops Reference](https://patrickfrankaiu.github.io/AAIS202-2602B/documentation/python_loops_guide.html) | A three-page visual reference for for loops, while loops, range(), break, continue, and common loop patterns. (Control-Click to open in a separate tab.)|
 
 ## Quick Start
 
