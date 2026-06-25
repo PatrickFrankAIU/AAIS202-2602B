@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Python Loops — ITCO221 Reference Guide</title>
+  <style>
+    :root {
+      --navy: #1a3a5c;
+      --blue: #1d5fa8;
+      --light-blue: #e8f2ff;
+      --pale-blue: #f4f8ff;
+      --ink: #172033;
+      --muted: #5c6575;
+      --line: #c7d7ee;
+      --dash: #8a94a6;
+      --green: #2e7d52;
+      --green-bg: #edf8f0;
+      --orange: #b85c00;
+      --orange-bg: #fff4e6;
+      --red: #b93c3c;
+      --red-bg: #fff0ef;
+      --shadow: 0 14px 30px rgba(6, 40, 90, 0.09);
+      --page-width: 8.5in;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: #dde4ee;
+      color: var(--ink);
+      font-family: "Aptos", "Segoe UI", Arial, sans-serif;
+      line-height: 1.5;
+    }
+
+    .document-shell {
+      width: min(100%, 980px);
+      margin: 32px auto;
+    }
+
+    .page {
+      width: var(--page-width);
+      margin: 0 auto 32px;
+      background: #fff;
+      padding: 0.42in 0.48in;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ── Dark mode toolbar ── */
+    .mode-toolbar {
+      width: var(--page-width);
+      margin: 0 auto 12px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
+
+    .mode-switch {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--navy);
+      font-weight: 800;
+      font-size: 14px;
+      background: #fff;
+      border: 2px solid var(--line);
+      border-radius: 999px;
+      padding: 7px 14px;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .mode-switch input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .switch-track {
+      width: 48px;
+      height: 26px;
+      border-radius: 999px;
+      background: #cdddf5;
+      border: 2px solid #a8c0e0;
+      position: relative;
+      transition: background .2s, border-color .2s;
+    }
+
+    .switch-thumb {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #fff;
+      left: 2px;
+      top: 2px;
+      box-shadow: 0 2px 5px rgba(0,0,0,.25);
+      transition: transform .2s, background .2s;
+    }
+
+    #darkModeToggle:checked + .switch-track { background: #1e3a5f; border-color: #5a8fc4; }
+    #darkModeToggle:checked + .switch-track .switch-thumb { transform: translateX(22px); background: #d0e8ff; }
+
+    /* ── Header ── */
+    .doc-header {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 18px;
+      align-items: center;
+      padding-bottom: 14px;
+      border-bottom: 4px solid var(--navy);
+      margin-bottom: 24px;
+    }
+
+    .header-icon {
+      width: 72px; height: 72px;
+      border: 5px solid var(--navy);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 36px; font-weight: 900; color: var(--navy);
+    }
+
+    .doc-title { margin: 0 0 4px; color: var(--navy); font-size: 34px; line-height: 1.05; letter-spacing: -0.03em; font-weight: 800; }
+    .doc-subtitle { margin: 0; color: var(--muted); font-size: 17px; font-style: italic; font-weight: 500; }
+
+    /* ── Typography ── */
+    h2 { margin: 0 0 10px; color: var(--navy); font-size: 23px; font-weight: 800; letter-spacing: -0.01em; }
+    h3 { margin: 16px 0 6px; color: var(--navy); font-size: 18px; font-weight: 750; }
+    p  { margin: 0 0 10px; font-size: 15.5px; }
+    ul, ol { font-size: 15.5px; margin: 8px 0 12px 22px; padding: 0; }
+    li { margin: 5px 0; padding-left: 4px; }
+    ul li::marker { color: var(--blue); }
+    strong, b { font-weight: 750; }
+    .muted { color: var(--muted); }
+
+    /* ── Layouts ── */
+    .two-col   { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+    .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; align-items: start; }
+
+    /* ── Callout boxes ── */
+    .callout-box { border-radius: 10px; padding: 13px 16px; margin: 14px 0; font-size: 15px; }
+    .callout-box.info   { background: var(--light-blue); border-left: 6px solid var(--blue);   color: #0f2d5a; }
+    .callout-box.tip    { background: var(--green-bg);   border-left: 6px solid var(--green);  color: #1a4a30; }
+    .callout-box.warn   { background: var(--orange-bg);  border-left: 6px solid var(--orange); color: #5a2d00; }
+    .callout-box.danger { background: var(--red-bg);     border-left: 6px solid var(--red);    color: #5a1a1a; }
+    .callout-label { font-weight: 800; font-size: 13px; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 4px; }
+
+    /* ── Code blocks ── */
+    .code-wrap { background: #1a1e2e; border-radius: 10px; overflow: hidden; margin: 12px 0; }
+    .code-bar  { background: #252b3d; padding: 6px 14px; display: flex; align-items: center; gap: 10px; }
+    .code-bar span { font-size: 12px; color: #8b9dc0; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+    .code-dots { display: flex; gap: 5px; }
+    .code-dots i { width: 10px; height: 10px; border-radius: 50%; }
+    .code-dots i:nth-child(1) { background: #e05c4e; }
+    .code-dots i:nth-child(2) { background: #e0a84e; }
+    .code-dots i:nth-child(3) { background: #4ebb71; }
+    pre.code { margin: 0; padding: 16px 18px; font-family: Consolas, "Courier New", monospace; font-size: 13.5px; line-height: 1.65; color: #cdd9f0; white-space: pre; overflow-x: auto; }
+    .kw  { color: #c792ea; font-weight: 700; }
+    .fn  { color: #82aaff; }
+    .str { color: #c3e88d; }
+    .cm  { color: #546e7a; font-style: italic; }
+    .num { color: #f78c6c; }
+    .op  { color: #89ddff; }
+
+    /* ── Visual panel ── */
+    .visual-panel { border: 2px solid var(--navy); border-radius: 12px; overflow: hidden; background: #fff; margin-top: 20px; box-shadow: 0 3px 12px rgba(6,40,90,0.05); }
+    .visual-title { background: linear-gradient(180deg, #f4f8ff, #e2edff); border-bottom: 1.5px solid var(--line); color: var(--navy); font-weight: 800; text-align: center; padding: 10px 14px; font-size: 17px; }
+
+    /* ── Flow diagrams (SVG-based, no clipping) ── */
+    .flow-svg-wrap { padding: 12px 16px 8px; display: flex; justify-content: center; }
+    .flow-svg-wrap svg { max-width: 100%; height: auto; }
+
+    /* ── range() cards ── */
+    .range-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 10px; }
+    .range-card { background: #f6f9ff; border: 1.5px solid var(--line); border-radius: 8px; padding: 10px 12px; }
+    .range-card code { display: block; font-family: Consolas, monospace; font-size: 13px; color: var(--blue); font-weight: 700; margin-bottom: 4px; }
+    .range-card .range-desc { font-size: 13px; color: var(--muted); }
+    .range-card .range-out  { font-family: Consolas, monospace; font-size: 12px; color: var(--green); font-weight: 700; margin-top: 4px; }
+
+    /* ── Keyword cards ── */
+    .keyword-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+    .keyword-card { border: 1.8px solid var(--line); border-left: 6px solid var(--navy); border-radius: 10px; padding: 12px 14px; background: #fff; }
+    .keyword-card code { font-family: Consolas, monospace; font-size: 16px; color: #c792ea; font-weight: 700; background: #1a1e2e; padding: 2px 8px; border-radius: 5px; }
+    .keyword-card p { font-size: 14px; margin: 6px 0 0; color: var(--muted); }
+
+    /* ── Compare table ── */
+    .compare-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 14.5px; border-radius: 10px; overflow: hidden; border: 2px solid var(--navy); margin-top: 14px; }
+    .compare-table th { padding: 11px 14px; font-weight: 800; font-size: 15px; text-align: left; }
+    .compare-table th:first-child { background: var(--pale-blue); color: var(--navy); border-right: 1.5px solid var(--line); width: 28%; }
+    .compare-table th.for-head   { background: #e0eeff; color: #0d3a77; border-right: 1.5px solid var(--line); }
+    .compare-table th.while-head { background: #e8f5ee; color: #1a4a30; }
+    .compare-table td { padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    .compare-table td:first-child { background: var(--pale-blue); font-weight: 700; color: var(--navy); border-right: 1.5px solid var(--line); }
+    .compare-table td:nth-child(2) { border-right: 1.5px solid var(--line); }
+    .compare-table tr:last-child td { border-bottom: 0; }
+
+    /* ── Error table ── */
+    .error-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 14px; border: 2px solid var(--navy); border-radius: 10px; overflow: hidden; margin-top: 14px; }
+    .error-table th { background: var(--navy); color: #fff; padding: 10px 14px; text-align: left; font-weight: 800; }
+    .error-table td { padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    .error-table tr:last-child td { border-bottom: 0; }
+    .error-table td:first-child { font-family: Consolas, monospace; color: var(--red); font-weight: 700; border-right: 1px solid var(--line); width: 22%; }
+    .error-table td:nth-child(2) { border-right: 1px solid var(--line); width: 38%; }
+    .error-table td:last-child { color: var(--green); font-weight: 600; }
+
+    /* ── Checklist ── */
+    .check-list { list-style: none; margin: 10px 0; padding: 0; }
+    .check-list li { display: flex; align-items: flex-start; gap: 10px; font-size: 15px; margin: 8px 0; padding-left: 0; }
+    .check-list li::before { content: none; }
+    .check-box { width: 18px; height: 18px; border: 2px solid var(--navy); border-radius: 4px; flex: 0 0 auto; margin-top: 2px; }
+
+    /* ── Divider & footer ── */
+    .section-divider { border: none; border-top: 1.5px solid var(--line); margin: 22px 0; }
+    .page-footer { border-top: 2.5px solid var(--navy); margin-top: 28px; padding-top: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 14px; color: var(--navy); font-weight: 700; }
+
+    /* ══════════════════
+       DARK MODE
+    ══════════════════ */
+    body.dark-mode { background: #0a1120; color: #e2eaf8; }
+    body.dark-mode .mode-switch { background: #111827; border-color: #2e4a72; color: #c8deff; box-shadow: none; }
+    body.dark-mode .page { background: #0f1825; color: #e2eaf8; box-shadow: 0 14px 30px rgba(0,0,0,.5); }
+    body.dark-mode .doc-header, body.dark-mode .page-footer { border-color: #4a7ab5; }
+    body.dark-mode h2, body.dark-mode h3, body.dark-mode .doc-title { color: #c8deff; }
+    body.dark-mode .doc-subtitle, body.dark-mode .muted, body.dark-mode p, body.dark-mode li, body.dark-mode td { color: #b8ccee !important; }
+    body.dark-mode .header-icon { border-color: #4a7ab5; color: #c8deff; }
+    body.dark-mode .visual-panel { background: #131f30; border-color: #2e4a72; }
+    body.dark-mode .visual-title { background: linear-gradient(180deg, #162034, #0e1828); border-color: #2e4a72; color: #c8deff; }
+    body.dark-mode .range-card, body.dark-mode .keyword-card { background: #131f30; border-color: #2e4a72; color: #e2eaf8; }
+    body.dark-mode .range-card code { color: #80b0ff; }
+    body.dark-mode .range-card .range-desc { color: #8a9cc0; }
+    body.dark-mode .range-card .range-out { color: #68c98a; }
+    body.dark-mode .keyword-card code { background: #101828; color: #d0a0ff; }
+    body.dark-mode .keyword-card p { color: #8a9cc0 !important; }
+    body.dark-mode .callout-box.info   { background: #0d1e36; color: #a0c4ff; }
+    body.dark-mode .callout-box.tip    { background: #0d200f; color: #70c98a; }
+    body.dark-mode .callout-box.warn   { background: #251400; color: #ffa040; }
+    body.dark-mode .callout-box.danger { background: #250a0a; color: #f08080; }
+    body.dark-mode .compare-table th:first-child, body.dark-mode .compare-table td:first-child { background: #0f1e30; color: #c8deff; border-color: #2e4a72; }
+    body.dark-mode .compare-table th.for-head   { background: #0d1e36; color: #80b0ff; }
+    body.dark-mode .compare-table th.while-head { background: #0d2018; color: #68c98a; }
+    body.dark-mode .compare-table td, body.dark-mode .compare-table th { border-color: #2e4a72; }
+    body.dark-mode .error-table { border-color: #2e4a72; }
+    body.dark-mode .error-table th { background: #1d3a60; }
+    body.dark-mode .error-table td { border-color: #2e4a72; }
+    body.dark-mode .error-table td:first-child { color: #f08080; }
+    body.dark-mode .error-table td:last-child  { color: #68c98a; }
+    body.dark-mode .section-divider { border-color: #2e4a72; }
+    body.dark-mode .check-box { border-color: #4a7ab5; }
+    body.dark-mode .page-footer { color: #c8deff; }
+
+    /* SVG text in dark mode */
+    body.dark-mode .flow-svg-wrap .dm-terminal-fill { fill: #1d3a60 !important; }
+    body.dark-mode .flow-svg-wrap .dm-terminal-text { fill: #e2eaf8 !important; }
+    body.dark-mode .flow-svg-wrap .dm-action-fill   { fill: #0d1f38 !important; }
+    body.dark-mode .flow-svg-wrap .dm-action-text   { fill: #80b0ff !important; }
+    body.dark-mode .flow-svg-wrap .dm-action-stroke { stroke: #2a6ab5 !important; }
+    body.dark-mode .flow-svg-wrap .dm-diamond-fill  { fill: #2a1800 !important; }
+    body.dark-mode .flow-svg-wrap .dm-diamond-text  { fill: #ffa040 !important; }
+    body.dark-mode .flow-svg-wrap .dm-diamond-stroke { stroke: #b85c00 !important; }
+    body.dark-mode .flow-svg-wrap .dm-yes-text      { fill: #68c98a !important; }
+    body.dark-mode .flow-svg-wrap .dm-no-text       { fill: #f08080 !important; }
+    body.dark-mode .flow-svg-wrap .dm-arrow         { stroke: #4a7ab5 !important; }
+    body.dark-mode .flow-svg-wrap .dm-note          { fill: #8a9cc0 !important; }
+    body.dark-mode .flow-svg-wrap .dm-panel-bg      { fill: #131f30 !important; }
+  </style>
+</head>
+<body>
+
+<div class="document-shell">
+
+  <div class="mode-toolbar">
+    <label class="mode-switch" for="darkModeToggle">
+      <input type="checkbox" id="darkModeToggle" />
+      <span class="switch-track"><span class="switch-thumb"></span></span>
+      Dark mode
+    </label>
+  </div>
+
+  <!-- ═══════════════════════════════
+       PAGE 1 — for loops
+  ═══════════════════════════════ -->
+  <section class="page">
+    <div class="doc-header">
+      <div class="header-icon">🔁</div>
+      <div>
+        <h1 class="doc-title">Python Loops</h1>
+        <p class="doc-subtitle">ITCO221 — Module Reference &nbsp;|&nbsp; for loops &bull; while loops &bull; common patterns</p>
+      </div>
+    </div>
+
+    <h2>The for Loop</h2>
+    <p>A <strong>for loop</strong> repeats a block of code once for each item in a sequence — a list, string, or range of numbers. You always know what you're iterating over before the loop starts.</p>
+
+    <div class="callout-box info">
+      <div class="callout-label">📌 Core idea</div>
+      <strong>"Do this for every item in that collection."</strong> Python automatically moves to the next item and stops when it runs out.
+    </div>
+
+    <div class="two-col" style="margin-top:18px;">
+      <div>
+        <h3>Syntax</h3>
+        <div class="code-wrap">
+          <div class="code-bar"><div class="code-dots"><i></i><i></i><i></i></div><span>Python</span></div>
+          <pre class="code"><span class="kw">for</span> variable <span class="kw">in</span> sequence:
+    <span class="cm"># indented body runs once per item</span>
+    do_something(variable)</pre>
+        </div>
+
+        <h3>Example — iterating a list</h3>
+        <div class="code-wrap">
+          <div class="code-bar"><div class="code-dots"><i></i><i></i><i></i></div><span>Python</span></div>
+          <pre class="code">fruits <span class="op">=</span> [<span class="str">'apple'</span>, <span class="str">'banana'</span>, <span class="str">'cherry'</span>]
+
+<span class="kw">for</span> fruit <span class="kw">in</span> fruits:
+    <span class="fn">print</span>(fruit)
+
+<span class="cm"># Output:</span>
+<span class="cm"># apple</span>
+<span class="cm"># banana</span>
+<span class="cm"># cherry</span></pre>
+        </div>
+
+        <h3>Example — iterating a string</h3>
+        <div class="code-wrap">
+          <div class="code-bar"><div class="code-dots"><i></i><i></i><i></i></div><span>Python</span></div>
+          <pre class="code"><span class="kw">for</span> letter <span class="kw">in</span> <span class="str">"hello"</span>:
+    <span class="fn">print</span>(letter)
+<span class="cm"># h  e  l  l  o  (one per line)</span></pre>
+        </div>
+      </div>
+
+      <div>
+        <h3>How it works — step by step</h3>
+        <div class="visual-panel">
+          <div class="visual-title">For loop execution flow</div>
+          <div class="flow-svg-wrap">
+            <!-- SVG flowchart: 260px wide, fully self-contained -->
+            <svg width="260" height="370" viewBox="0 0 260 370" xmlns="http://www.w3.org/2000/svg" font-family="'Aptos','Segoe UI',Arial,sans-serif">
+              <defs>
+                <marker id="arr-for" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                  <path d="M2 2L8 5L2 8" fill="none" stroke="#8a94a6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </marker>
+              </defs>
+
+              <!-- Start -->
+              <rect x="75" y="10" width="110" height="32" rx="16" fill="#1a3a5c" class="dm-terminal-fill"/>
+              <text x="130" y="31" text-anchor="middle" font-size="13" font-weight="700" fill="#fff" class="dm-terminal-text">Start</text>
+
+              <!-- Arrow down -->
+              <line x1="130" y1="42" x2="130" y2="68" stroke="#8a94a6" stroke-width="1.5" marker-end="url(#arr-for)" class="dm-arrow"/>
+
+              <!-- Diamond: More items? -->
+              <polygon points="130,72 210,104 130,136 50,104" fill="#fff3e0" stroke="#b85c00" stroke-width="2" class="dm-diamond-fill dm-diamond-stroke"/>
+              <text x="130" y="99" text-anchor="middle" font-size="12" font-weight="700" fill="#b85c00" class="dm-diamond-text">More items</text>
+              <text x="130" y="114" text-anchor="middle" font-size="12" font-weight="700" fill="#b85c00" class="dm-diamond-text">in sequence?</text>
+
+              <!-- YES label + arrow down -->
+              <line x1="130" y1="136" x2="130" y2="162" stroke="#8a94a6" stroke-width="1.5" marker-end="url(#arr-for)" class="dm-arrow"/>
+              <text x="142" y="153" font-size="11" font-weight="800" fill="#2e7d52" class="dm-yes-text">YES</text>
+
+              <!-- Action: variable = next item -->
+              <rect x="40" y="165" width="180" height="34" rx="7" fill="#e6f0ff" stroke="#1d5fa8" stroke-width="1.5" class="dm-action-fill dm-action-stroke"/>
+              <text x="130" y="187" text-anchor="middle" font-size="12" font-weight="700" fill="#1d5fa8" class="dm-action-text">variable = next item</text>
+
+              <!-- Arrow -->
+              <line x1="130" y1="199" x2="130" y2="220" stroke="#8a94a6" stroke-width="1.5" marker-end="url(#arr-for)" class="dm-arrow"/>
+
+              <!-- Action: Run loop body -->
+              <rect x="40" y="223" width="180" height="34" rx="7" fill="#e6f0ff" stroke="#1d5fa8" stroke-width="1.5" class="dm-action-fill dm-action-stroke"/>
+              <text x="130" y="245" text-anchor="middle" font-size="12" font-weight="700" fill="#1d5fa8" class="dm-action-text">Run loop body</text>
+
+              <!-- Arrow back up (left side loop-back) -->
+              <polyline points="40,240 16,240 16,104 50,104" fill="none" stroke="#8a94a6" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arr-for)" class="dm-arrow"/>
+
+              <!-- NO label + arrow right to Loop exits -->
+              <line x1="210" y1="104" x2="230" y2="104" stroke="#8a94a6" stroke-width="1.5" class="dm-arrow"/>
+              <text x="215" y="96" font-size="11" font-weight="800" fill="#b93c3c" class="dm-no-text">NO</text>
+              <!-- Arrow down to loop exits -->
+              <line x1="244" y1="104" x2="244" y2="290" stroke="#8a94a6" stroke-width="1.5" marker-end="url(#arr-for)" class="dm-arrow"/>
+              <line x1="185" y1="304" x2="244" y2="304" stroke="#8a94a6" stroke-width="1.5" class="dm-arrow"/>
+
+              <!-- Loop exits -->
+              <rect x="75" y="290" width="110" height="32" rx="16" fill="#1a3a5c" class="dm-terminal-fill"/>
+              <text x="130" y="311" text-anchor="middle" font-size="13" font-weight="700" fill="#fff" class="dm-terminal-text">Loop exits</text>
+
+              <!-- Note -->
+              <text x="130" y="345" text-anchor="middle" font-size="10.5" fill="#8a94a6" class="dm-note">↺ dashed arrow = returns to condition check</text>
+            </svg>
+          </div>
+        </div>
+
+        <div class="callout-box tip" style="margin-top:14px;">
+          <div class="callout-label">✅ Remember</div>
+          The <strong>loop variable</strong> (e.g. <code>fruit</code>) is just a name you choose. Python assigns the next item to it automatically at the start of each iteration.
+        </div>
+      </div>
+    </div>
+
+    <hr class="section-divider" />
+
+    <h2>The range() Function</h2>
+    <p>Use <code>range()</code> when you need to loop a specific number of times or generate a sequence of numbers.</p>
+
+    <div class="range-row">
+      <div class="range-card">
+        <code>range(stop)</code>
+        <div class="range-desc">Counts from 0 up to, but <strong>not including</strong>, stop.</div>
+        <div class="range-out">range(5) → 0, 1, 2, 3, 4</div>
+      </div>
+      <div class="range-card">
+        <code>range(start, stop)</code>
+        <div class="range-desc">Counts from start up to, but not including, stop.</div>
+        <div class="range-out">range(1, 6) → 1, 2, 3, 4, 5</div>
+      </div>
+      <div class="range-card">
+        <code>range(start, stop, step)</code>
+        <div class="range-desc">Counts by step each time.</div>
+        <div class="range-out">range(0, 10, 2) → 0, 2, 4, 6, 8</div>
+      </div>
+      <div class="range-card">
+        <code>range(stop, start, -1)</code>
+        <div class="range-desc">Counts down using a negative step.</div>
+        <div class="range-out">range(5, 0, -1) → 5, 4, 3, 2, 1</div>
+      </div>
+    </div>
+
+    <div class="code-wrap" style="margin-top:14px;">
+      <div class="code-bar"><div class="code-dots"><i></i><i></i><i></i></div><span>Python — range() examples</span></div>
+      <pre class="code"><span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">5</span>):
+    <span class="fn">print</span>(i)          <span class="cm"># 0 1 2 3 4</span>
+
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">6</span>):
+    <span class="fn">print</span>(i)          <span class="cm"># 1 2 3 4 5</span>
+
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">0</span>, <span class="num">10</span>, <span class="num">2</span>):
+    <span class="fn">print</span>(i)          <span class="cm"># 0 2 4 6 8</span></pre>
+    </div>
+
+    <div class="callout-box warn" style="margin-top:4px;">
+      <div class="callout-label">⚠️ Common mistake</div>
+      <strong>range(5) gives 0 through 4, not 1 through 5.</strong> The stop value is never included. To loop 5 times printing 1–5, use <code>range(1, 6)</code>.
+    </div>
+
+    <div class="page-footer"><span>ITCO221 — Python Loops</span><span>Page 1 of 3</span></div>
+  </section>
+
+
+  <!-- ═══════════════════════════════
+       PAGE 2 — while loops & keywords
+  ═══════════════════════════════ -->
+  <section class="page">
+    <div class="doc-header">
+      <div class="header-icon">🔁</div>
+      <div>
+        <h1 class="doc-title">Python Loops</h1>
+        <p class="doc-subtitle">ITCO221 — Module Reference &nbsp;|&nbsp; for loops &bull; while loops &bull; common patterns</p>
+      </div>
+    </div>
+
+    <h2>The while Loop</h2>
+    <p>A <strong>while loop</strong> keeps running as long as a condition is <code>True</code>. Use it when you <em>don't know in advance</em> how many iterations you need — you're waiting for something to change.</p>
+
+    <div class="callout-box info">
+      <div class="callout-label">📌 Core idea</div>
+      <strong>"Keep doing this until the condition becomes False."</strong> You are responsible for making sure that eventually happens.
+    </div>
+
+    <!-- Three-column: syntax | flowchart | examples — keeps diagram centered and bounded -->
+    <div class="three-col" style="margin-top:18px; align-items:start;">
+
+      <!-- Col 1: Syntax + countdown example -->
+      <div>
+        <h3>Syntax</h3>
+        <div class="code-wrap">
+          <div class="code-bar"><div class="code-dots"><i></i><i></i><i></i></div><span>Python</span></div>
+          <pre class="code"><span class="kw">while</span> condition:
+    <span class="cm"># runs while True</span>
+    do_something()
+    <span class="cm"># update condition!</span></pre>
+        </div>
+
+        <h3>Countdown example</h3>
+        <div class="code-wrap">
+          <div class="code-bar"><div class="code-dots"><i></i><i></i><i></i></div><span>Python</span></div>
+          <pre class="code">count <span class="op">=</span> <span class="num">3</span>
+
+<span class="kw">while</span> count <span class="op">&gt;</span> <span class="num">0</span>:
+    <span class="fn">print</span>(count)
+    count <span class="op">-=</span> <span class="num">1</span>
+
+<span class="fn">print</span>(<span class="str">"Done!"</span>)
+<span class="cm"># 3  2  1  Done!</span></pre>
+        </div>
+      </div>
+
+      <!-- Col 2: Flowchart — fixed-width SVG, can't overflow -->
+      <div>
+        <h3 style="text-align:center;">Execution flow</h3>
+        <div class="visual-panel" style="margin-top:6px;">
+          <div class="visual-title">While loop</div>
+          <div class="flow-svg-wrap">
+            <svg width="210" height="360" viewBox="0 0 210 360" xmlns="http://www.w3.org/2000/svg" font-family="'Aptos','Segoe UI',Arial,sans-serif">
+              <defs>
+                <marker id="arr-wh" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                  <path d="M2 2L8 5L2 8" fill="none" stroke="#8a94a6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </marker>
+              </defs>
+
+              <!-- Start -->
+              <rect x="55" y="10" width="100" height="30" rx="15" fill="#1a3a5c" class="dm-terminal-fill"/>
+              <text x="105" y="30" text-anchor="middle" font-size="12" font-weight="700" fill="#fff" class="dm-terminal-text">Start</text>
+
+              <!-- Arrow -->
+              <line x1="105" y1="40" x2="105" y2="62" stroke="#8a94a6" stroke-width="1.5" marker-end="url(#arr-wh)" class="dm-arrow"/>
+
+              <!-- Diamond -->
+              <polygon points="105,66 175,96 105,126 35,96" fill="#fff3e0" stroke="#b85c00" stroke-width="2" class="dm-diamond-fill dm-diamond-stroke"/>
+              <text x="105" y="91" text-anchor="middle" font-size="11" font-weight="700" fill="#b85c00" class="dm-diamond-text">Condition</text>
+              <text x="105" y="105" text-anchor="middle" font-size="11" font-weight="700" fill="#b85c00" class="dm-diamond-text">True?</text>
+
+              <!-- YES -->
+              <line x1="105" y1="126" x2="105" y2="150" stroke="#8a94a6" stroke-width="1.5" marker-end="url(#arr-wh)" class="dm-arrow"/>
+              <text x="116" y="142" font-size="11" font-weight="800" fill="#2e7d52" class="dm-yes-text">YES</text>
+
+              <!-- Run loop body -->
+              <rect x="25" y="153" width="160" height="32" rx="7" fill="#e6f0ff" stroke="#1d5fa8" stroke-width="1.5" class="dm-action-fill dm-action-stroke"/>
+              <text x="105" y="174" text-anchor="middle" font-size="12" font-weight="700" fill="#1d5fa8" class="dm-action-text">Run loop body</text>
+
+              <!-- Arrow -->
+              <line x1="105" y1="185" x2="105" y2="208" stroke="#8a94a6" stroke-width="1.5" marker-end="url(#arr-wh)" class="dm-arrow"/>
+
+              <!-- Update variable -->
+              <rect x="25" y="211" width="160" height="32" rx="7" fill="#e6f0ff" stroke="#1d5fa8" stroke-width="1.5" class="dm-action-fill dm-action-stroke"/>
+              <text x="105" y="232" text-anchor="middle" font-size="12" font-weight="700" fill="#1d5fa8" class="dm-action-text">Update variable</text>
+
+              <!-- Loop-back arrow (left side) -->
+              <polyline points="25,227 8,227 8,96 35,96" fill="none" stroke="#8a94a6" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arr-wh)" class="dm-arrow"/>
+
+              <!-- NO: right of diamond → down → Loop exits -->
+              <line x1="175" y1="96" x2="195" y2="96" stroke="#8a94a6" stroke-width="1.5" class="dm-arrow"/>
+              <text x="178" y="88" font-size="11" font-weight="800" fill="#b93c3c" class="dm-no-text">NO</text>
+              <line x1="195" y1="96" x2="195" y2="306" stroke="#8a94a6" stroke-width="1.5" class="dm-arrow"/>
+              <line x1="155" y1="306" x2="195" y2="306" stroke="#8a94a6" stroke-width="1.5" class="dm-arrow"/>
+
+              <!-- Loop exits -->
+              <rect x="55" y="292" width="100" height="30" rx="15" fill="#1a3a5c" class="dm-terminal-fill"/>
+              <text x="105" y="312" text-anchor="middle" font-size="12" font-weight="700" fill="#fff" class="dm-terminal-text">Loop exits</text>
+
+              <!-- Note -->
+              <text x="105" y="342" text-anchor="middle" font-size="10" fill="#8a94a6" class="dm-note">↺ dashed = loops back</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Col 3: User input example + danger callout -->
+      <div>
+        <h3>User input example</h3>
+        <div class="code-wrap">
+          <div class="code-bar"><div class="code-dots"><i></i><i></i><i></i></div><span>Python</span></div>
+          <pre class="code" style="font-size:12.5px;">answer <span class="op">=</span> <span class="str">""</span>
+
+<span class="kw">while</span> answer <span class="op">!=</span> <span class="str">"quit"</span>:
+    answer <span class="op">=</span> <span class="fn">input</span>(<span class="str">"&gt; "</span>)
+    <span class="fn">print</span>(<span class="str">"You typed:"</span>, answer)
+
+<span class="fn">print</span>(<span class="str">"Goodbye!"</span>)</pre>
+        </div>
+
+        <div class="callout-box danger" style="margin-top:12px;">
+          <div class="callout-label">🚫 Infinite loop danger</div>
+          If the condition <strong>never becomes False</strong>, the loop runs forever and your program freezes.
+          <div class="code-wrap" style="margin-top:8px;">
+            <pre class="code" style="padding:10px 14px; font-size:12.5px;"><span class="cm"># DANGER — never stops:</span>
+<span class="kw">while</span> <span class="kw">True</span>:
+    <span class="fn">print</span>(<span class="str">"forever"</span>)</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="section-divider" />
+
+    <h2>Loop Keywords: break and continue</h2>
+    <p>Two special keywords give you extra control over loop flow.</p>
+
+    <div class="keyword-grid">
+      <div class="keyword-card">
+        <code>break</code>
+        <p>Immediately <strong>exits the entire loop</strong>, no matter how many items remain.</p>
+        <div class="code-wrap" style="margin-top:10px;">
+          <pre class="code" style="padding:10px 14px; font-size:13px;"><span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">10</span>):
+    <span class="kw">if</span> i <span class="op">==</span> <span class="num">5</span>:
+        <span class="kw">break</span>      <span class="cm"># stops at 5</span>
+    <span class="fn">print</span>(i)
+<span class="cm"># 0 1 2 3 4</span></pre>
+        </div>
+      </div>
+      <div class="keyword-card">
+        <code>continue</code>
+        <p><strong>Skips the rest of the current iteration</strong> and jumps to the next one.</p>
+        <div class="code-wrap" style="margin-top:10px;">
+          <pre class="code" style="padding:10px 14px; font-size:13px;"><span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">6</span>):
+    <span class="kw">if</span> i <span class="op">==</span> <span class="num">3</span>:
+        <span class="kw">continue</span>   <span class="cm"># skips 3</span>
+    <span class="fn">print</span>(i)
+<span class="cm"># 0 1 2 4 5</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <hr class="section-divider" />
+
+    <h2>Useful Loop Patterns</h2>
+    <div class="two-col">
+      <div>
+        <h3>Accumulator pattern</h3>
+        <p>Build up a total by updating a variable inside the loop.</p>
+        <div class="code-wrap">
+          <div class="code-bar"><div class="code-dots"><i></i><i></i><i></i></div><span>Python</span></div>
+          <pre class="code">total <span class="op">=</span> <span class="num">0</span>
+numbers <span class="op">=</span> [<span class="num">5</span>, <span class="num">10</span>, <span class="num">15</span>, <span class="num">20</span>]
+
+<span class="kw">for</span> n <span class="kw">in</span> numbers:
+    total <span class="op">+=</span> n
+
+<span class="fn">print</span>(total)   <span class="cm"># 50</span></pre>
+        </div>
+      </div>
+      <div>
+        <h3>enumerate() — index + value</h3>
+        <p>When you need both the position and the value of each item.</p>
+        <div class="code-wrap">
+          <div class="code-bar"><div class="code-dots"><i></i><i></i><i></i></div><span>Python</span></div>
+          <pre class="code">fruits <span class="op">=</span> [<span class="str">'apple'</span>, <span class="str">'banana'</span>, <span class="str">'cherry'</span>]
+
+<span class="kw">for</span> i, fruit <span class="kw">in</span> <span class="fn">enumerate</span>(fruits):
+    <span class="fn">print</span>(i, fruit)
+<span class="cm"># 0 apple</span>
+<span class="cm"># 1 banana</span>
+<span class="cm"># 2 cherry</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-footer"><span>ITCO221 — Python Loops</span><span>Page 2 of 3</span></div>
+  </section>
+
+
+  <!-- ═══════════════════════════════
+       PAGE 3 — Comparison, errors, checklist
+  ═══════════════════════════════ -->
+  <section class="page">
+    <div class="doc-header">
+      <div class="header-icon">🔁</div>
+      <div>
+        <h1 class="doc-title">Python Loops</h1>
+        <p class="doc-subtitle">ITCO221 — Module Reference &nbsp;|&nbsp; for loops &bull; while loops &bull; common patterns</p>
+      </div>
+    </div>
+
+    <h2>for vs. while — When to Use Which?</h2>
+    <p>The choice usually comes down to one question: <strong>do you know what you're iterating over before the loop starts?</strong></p>
+
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th class="for-head">for loop</th>
+          <th class="while-head">while loop</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Use when…</td>
+          <td>You know what to iterate over (list, range, string)</td>
+          <td>You're waiting for a condition to change</td>
+        </tr>
+        <tr>
+          <td>Iteration control</td>
+          <td>Python handles it automatically</td>
+          <td>You must update something in the body</td>
+        </tr>
+        <tr>
+          <td>Typical use cases</td>
+          <td>Process every item in a list; repeat N times</td>
+          <td>User input loops; game loops; wait for an event</td>
+        </tr>
+        <tr>
+          <td>Risk of infinite loop?</td>
+          <td>No — stops when the sequence ends</td>
+          <td>Yes — if condition never becomes False</td>
+        </tr>
+        <tr>
+          <td>Quick rule</td>
+          <td><strong>"I have a list / count"</strong></td>
+          <td><strong>"I'm waiting until something happens"</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout-box tip" style="margin-top:16px;">
+      <div class="callout-label">💡 Default choice</div>
+      When in doubt, reach for <strong>for</strong>. Most beginner problems give you a list or a number — for loops are safer, shorter, and harder to accidentally break.
+    </div>
+
+    <hr class="section-divider" />
+
+    <h2>Common Errors and Fixes</h2>
+    <table class="error-table">
+      <thead>
+        <tr><th>Error type</th><th>What it looks like</th><th>Fix</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>IndentationError</td>
+          <td>Loop body not indented (4 spaces required)</td>
+          <td>Indent all lines inside the loop consistently</td>
+        </tr>
+        <tr>
+          <td>Infinite loop</td>
+          <td>Program runs forever, output repeats endlessly</td>
+          <td>Ensure the condition variable is updated inside the body</td>
+        </tr>
+        <tr>
+          <td>Off-by-one</td>
+          <td>range(5) used when 1–5 was intended (gives 0–4)</td>
+          <td>Use range(1, 6) to start at 1 and end at 5</td>
+        </tr>
+        <tr>
+          <td>Wrong variable</td>
+          <td>Using list name instead of loop variable inside body</td>
+          <td>Check you're using the loop variable (e.g. fruit, not fruits)</td>
+        </tr>
+        <tr>
+          <td>Modifying list</td>
+          <td>Changing a list while looping over it — unexpected skips</td>
+          <td>Iterate over a copy: for item in my_list.copy():</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <hr class="section-divider" />
+
+    <h2>Nested Loops</h2>
+    <p>A loop can be placed <em>inside</em> another loop. The inner loop runs completely for every single iteration of the outer loop.</p>
+
+    <div class="two-col">
+      <div>
+        <div class="code-wrap">
+          <div class="code-bar"><div class="code-dots"><i></i><i></i><i></i></div><span>Python</span></div>
+          <pre class="code"><span class="kw">for</span> row <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">4</span>):      <span class="cm"># 1, 2, 3</span>
+    <span class="kw">for</span> col <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">4</span>):  <span class="cm"># 1, 2, 3</span>
+        <span class="fn">print</span>(row, col)
+
+<span class="cm"># 1 1 / 1 2 / 1 3</span>
+<span class="cm"># 2 1 / 2 2 / 2 3</span>
+<span class="cm"># 3 1 / 3 2 / 3 3  →  9 lines total</span></pre>
+        </div>
+      </div>
+      <div>
+        <div class="callout-box warn">
+          <div class="callout-label">⚠️ Watch the indentation</div>
+          Each level of nesting adds another 4-space indent. The inner loop body is indented 8 spaces. Code after both loops (back at 0 spaces) runs only once when everything is done.
+        </div>
+      </div>
+    </div>
+
+    <hr class="section-divider" />
+
+    <h2>Self-Check — Concepts to Know</h2>
+    <p>Before the quiz, make sure you can answer yes to each of these:</p>
+
+    <div class="two-col">
+      <ul class="check-list">
+        <li><span class="check-box"></span>I can write a for loop that iterates over a list</li>
+        <li><span class="check-box"></span>I know that range(5) produces 0–4, not 1–5</li>
+        <li><span class="check-box"></span>I can use range(start, stop, step)</li>
+        <li><span class="check-box"></span>I can write a while loop with a decrementing counter</li>
+        <li><span class="check-box"></span>I understand what causes an infinite loop and how to avoid it</li>
+      </ul>
+      <ul class="check-list">
+        <li><span class="check-box"></span>I know what break does (exits the loop early)</li>
+        <li><span class="check-box"></span>I know what continue does (skips to next iteration)</li>
+        <li><span class="check-box"></span>I can explain when to choose for vs. while</li>
+        <li><span class="check-box"></span>I can use the accumulator pattern to compute a total</li>
+        <li><span class="check-box"></span>I can write a nested loop and predict its output</li>
+      </ul>
+    </div>
+
+    <div class="page-footer"><span>ITCO221 — Python Loops</span><span>Page 3 of 3</span></div>
+  </section>
+
+</div>
+
+<script>
+  (function () {
+    const toggle = document.getElementById("darkModeToggle");
+    const KEY = "itco221LoopsTheme";
+    function setDarkMode(enabled) {
+      document.body.classList.toggle("dark-mode", enabled);
+      toggle.checked = enabled;
+      localStorage.setItem(KEY, enabled ? "dark" : "light");
+    }
+    if (localStorage.getItem(KEY) === "dark") setDarkMode(true);
+    toggle.addEventListener("change", function () { setDarkMode(toggle.checked); });
+  })();
+</script>
+
+</body>
+</html>
