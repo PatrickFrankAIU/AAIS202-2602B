@@ -18,7 +18,7 @@ Use these guides to get ready for class work, optional local practice, and GitHu
 | [Create Your GitHub Portfolio](https://patrickfrankaiu.github.io/AAIS202-2602B/documentation/github_portfolio_guide.html) | Building and polishing your GitHub profile and portfolio materials. (Control-Click to open in a separate tab.)|
 | [Python Loops Reference](https://patrickfrankaiu.github.io/AAIS202-2602B/documentation/python_loops_guide.html) | A three-page visual reference for for loops, while loops, range(), break, continue, and common loop patterns. (Control-Click to open in a separate tab.)|
 
-<br><i>Note: There are also two useful aids related to Python data structures in the documentation folder.</i><br>
+<i>Note: There are also two useful aids related to Python data structures in the documentation folder.</i><br>
 
 ## Quick Start
 
